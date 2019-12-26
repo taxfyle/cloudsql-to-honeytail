@@ -13,6 +13,12 @@ if ! [[ -z "${ADD_PARAMS:-}" ]]; then
     while IFS='' read val; do
         ADD_PARAMS_ARR+=("$val")
     done < <(xargs -n1 <<<"$ADD_PARAMS")
+    if (( ${#ADD_PARAMS_ARR[@]} % 2 == 1 )); then
+        echo "Invalid number of additional parameters. Must be divisble by two."
+        echo "Please ensure you escape params with spaces with single or double"
+        echo "quotes and not with backslashes before the spaces."
+        exit 1
+    fi
 
     for (( i = 0 ; i < ${#ADD_PARAMS_ARR[@]} ; i+=2 )); do
         FIELD_NAME="${ADD_PARAMS_ARR[$i]}"
