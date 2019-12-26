@@ -24,7 +24,7 @@ if ! [[ -z "${ADD_PARAMS:-}" ]]; then
         FIELD_NAME="${ADD_PARAMS_ARR[$i]}"
         FIELD_VALUE="${ADD_PARAMS_ARR[$((i + 1))]}"
         ADDITIONAL_FLAGS+=("--add_field")
-        ADDITIONAL_FLAGS+=("'${FIELD_NAME}'='${FIELD_VALUE}'")
+        ADDITIONAL_FLAGS+=("${FIELD_NAME}=${FIELD_VALUE}")
     done
 fi
 
