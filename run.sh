@@ -7,13 +7,18 @@ if ! [[ -z "${DEBUG:-}" ]]; then
     HTDEBUG="--debug --debug_stdout"
 fi
 
+ADDITIONAL_FLAGS=()
 if ! [[ -z "${ADD_PARAMS:-}" ]]; then
-    ADD_PARAMS_ARR=($(echo "${ADD_PARAMS}"));
-    ADDITIONAL_FLAGS=""
-    for (( i = 1 ; i < ${#ADD_PARAMS_ARR[@]} ; i+=2 )); do
+    ADD_PARAMS_ARR=()
+    while IFS='' read val; do
+        ADD_PARAMS_ARR+=("$val")
+    done < <(xargs -n1 <<<"$ADD_PARAMS")
+
+    for (( i = 0 ; i < ${#ADD_PARAMS_ARR[@]} ; i+=2 )); do
         FIELD_NAME="${ADD_PARAMS_ARR[$i]}"
         FIELD_VALUE="${ADD_PARAMS_ARR[$((i + 1))]}"
-        ADDITIONAL_FLAGS+="--add_field \"${FIELD_NAME}\"=\"${FIELD_VALUE}\" "
+        ADDITIONAL_FLAGS+=("--add_field")
+        ADDITIONAL_FLAGS+=("'${FIELD_NAME}'='${FIELD_VALUE}'")
     done
 fi
 
@@ -29,5 +34,5 @@ fi
     --dataset="${DATASET:-postgres}" \
     --parser=postgresql \
     --postgresql.log_line_prefix='[%t]: [%p]: [%l-1] db=%d,user=%u' \
-    "${ADDITIONAL_FLAGS:-}" \
+    "${ADDITIONAL_FLAGS[@]}" \
     -f -
