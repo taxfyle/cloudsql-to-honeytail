@@ -34,7 +34,7 @@ if [[ "${GOOGLE_APPLICATION_CREDENTIALS_JSON:-}" != "" ]]; then
     export GOOGLE_APPLICATION_CREDENTIALS=service-account.key
 fi
 
-./cloudsqltail -project ${PROJECT_ID} -subscription ${SUBSCRIPTION_NAME} | \
+./cloudsqltail -project ${PROJECT_ID} -subscription ${SUBSCRIPTION_NAME} -recv-routines 1 | \
 ./honeytail ${HTDEBUG:-} \
     -k="${HONEYCOMB_WRITEKEY:-unset}" \
     --dataset="${DATASET:-postgres}" \
